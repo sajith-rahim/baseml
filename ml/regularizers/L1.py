@@ -13,5 +13,5 @@ class L1:
     def __call__(self, w):
         return self._lambda * np.linalg.norm(w)
 
-    def grad(self, w):
+    def gradient(self, w):
         return self._lambda * np.sign(w)

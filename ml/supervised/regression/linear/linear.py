@@ -1,5 +1,5 @@
 from ml.regularizers.L2 import L2
-from ml.supervised.regression.linear.regression import Regression
+from ml.supervised.regression.regression import Regression
 
 import numpy as np
 
@@ -16,7 +16,7 @@ class LinearRegression(Regression):
         else use gradient descent.
     """
 
-    def __init__(self, n_iter=100, learning_rate=0.01, use_gd=True, reg_coeff = None):
+    def __init__(self, n_iter=100, lr=0.01, use_gd=True, reg_coeff = None):
         self.use_gd = use_gd
         if reg_coeff is None:
             # No regularization
@@ -24,8 +24,7 @@ class LinearRegression(Regression):
             self.regularization.grad = lambda x: 0
         else:
             self.regularization = L2(_lambda=reg_coeff)
-        super(LinearRegression, self).__init__(n_iter=n_iter,
-                                               learning_rate=learning_rate)
+        super(LinearRegression, self).__init__(n_iter=n_iter, lr=lr)
 
     def fit(self, X, y, verbose=True):
         if not self.use_gd:

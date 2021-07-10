@@ -10,5 +10,5 @@ class L2:
     def __call__(self, w):
         return self._lambda * w.T.dot(w)
 
-    def grad(self, w):
+    def gradient(self, w):
         return self._lambda * w
