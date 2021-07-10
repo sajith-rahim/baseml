@@ -1,30 +1,49 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn.metrics import mean_squared_error, accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
-from ml.supervised.regression.logistic.logistic import LogisticRegression
-from ml.utils.data_utils import normalize
-from ml.utils.viz import plot_in_2d
+from ml.supervised.regression.polynomial.polynomial import PolynomialRegression
 
 if __name__ == '__main__':
     print('baseml')
-    data = datasets.load_iris()
-    X = normalize(data.data[data.target != 0])
-    y = data.target[data.target != 0]
-    y[y == 1] = 0
-    y[y == 2] = 1
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+    # Load the diabetes dataset
+    diabetes_X, diabetes_y = datasets.load_diabetes(return_X_y=True)
 
-    clf = LogisticRegression()
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    # Use only one feature
+    diabetes_X = diabetes_X[:, np.newaxis, 2]
 
-    y_pred = np.reshape(y_pred, y_test.shape)
+    # Split the data into training/testing sets
+    diabetes_X_train = diabetes_X[:-20]
+    diabetes_X_test = diabetes_X[-20:]
 
-    accuracy = accuracy_score(y_test, y_pred)
-    print("Accuracy:", accuracy)
+    # Split the targets into training/testing sets
+    diabetes_y_train = diabetes_y[:-20]
+    diabetes_y_test = diabetes_y[-20:]
 
-    plot_in_2d(X_test, y_pred, title="Logistic Regression", accuracy=accuracy)
+    model = PolynomialRegression(degree= 3)
+
+    model.fit(diabetes_X_train, diabetes_y_train)
+
+    n = len(model.training_loss)
+    training, = plt.plot(range(n), model.training_loss, label="Training Error")
+    plt.legend(handles=[training])
+    plt.title("Error Plot")
+    plt.ylabel('Mean Squared Error')
+    plt.xlabel('Iterations')
+    plt.show()
+
+    y_pred = model.predict(diabetes_X_test)
+    print(y_pred)
+    mse = mean_squared_error(diabetes_y_test, y_pred)
+    print("Mean squared error: %s" % (mse))
+
+    # Plot outputs
+    plt.scatter(diabetes_X_test, diabetes_y_test, color='black')
+    plt.plot(diabetes_X_test, y_pred, color='blue', linewidth=3)
+
+    plt.xticks(())
+    plt.yticks(())
+
+    plt.show()

@@ -11,8 +11,8 @@ class NoRegularization:
         pass
 
     def __call__(self, w):
-        return 0.0*w
+        return 0.0
 
     @staticmethod
     def gradient(w):
-        return 0.0*w
+        return 0.0
