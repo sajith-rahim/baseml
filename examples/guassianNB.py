@@ -1,16 +1,12 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from ml.supervised.knn.knn import KNearestNeighbours
 from ml.supervised.naive_bayes.gaussian_naive_bayes import GaussianNaiveBayes
 from ml.utils.viz import plot_in_2d
 
-if __name__ == '__main__':
-    print('baseml')
-
+def run():
     data = datasets.load_iris()
     X = data.data
     y = data.target
@@ -20,7 +16,6 @@ if __name__ == '__main__':
     model = GaussianNaiveBayes()
 
     model.fit(X_train, y_train)
-
 
     y_cap = model.predict(X_test)
     print(y_cap)
@@ -32,3 +27,9 @@ if __name__ == '__main__':
     # Plot outputs
     # plot_in_2d(X_test, y_test, title="KNN", accuracy=accuracy, legend_labels=data.target_names)
     plot_in_2d(X_test, y_cap, title="GNB", accuracy=accuracy, legend_labels=data.target_names)
+
+
+if __name__ == '__main__':
+    print('baseml')
+
+    run()

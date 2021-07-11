@@ -8,6 +8,9 @@ from ml.utils.distances import euclidean_distance, cosine_dist
 
 
 class KNearestNeighbours(BaseEstimator):
+    """
+    k-Nearest Neighbor Algorithm
+    """
 
     def __init__(self, is_classifier, k=3, measure="mean", distance_measure = 'l2'):
         self.is_classifier = is_classifier

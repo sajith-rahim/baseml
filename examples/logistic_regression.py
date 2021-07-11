@@ -1,7 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from ml.supervised.regression.logistic.logistic import LogisticRegression
