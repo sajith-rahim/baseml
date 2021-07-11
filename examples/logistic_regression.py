@@ -8,11 +8,12 @@ from ml.supervised.regression.logistic.logistic import LogisticRegression
 from ml.utils.data_utils import normalize
 from ml.utils.viz import plot_in_2d
 
-if __name__ == '__main__':
-    print('baseml')
+
+def run():
     data = datasets.load_iris()
     X = normalize(data.data[data.target != 0])
     y = data.target[data.target != 0]
+    # 2class
     y[y == 1] = 0
     y[y == 2] = 1
 
@@ -28,3 +29,8 @@ if __name__ == '__main__':
     print("Accuracy:", accuracy)
 
     plot_in_2d(X_test, y_pred, title="Logistic Regression", accuracy=accuracy)
+
+
+if __name__ == '__main__':
+    print('baseml')
+    run()

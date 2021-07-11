@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.metrics import mean_squared_error
 
-from ml.supervised.regression.linear.linear import LinearRegression
+from ml.supervised.regression.polynomial.polynomial import PolynomialRegression
 
 
 def run():
@@ -21,7 +21,7 @@ def run():
     diabetes_y_train = diabetes_y[:-20]
     diabetes_y_test = diabetes_y[-20:]
 
-    model = LinearRegression(n_iter=200)
+    model = PolynomialRegression(degree=3)
 
     model.fit(diabetes_X_train, diabetes_y_train)
 
@@ -51,3 +51,4 @@ def run():
 if __name__ == '__main__':
     print('baseml')
     run()
+
