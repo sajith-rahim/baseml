@@ -5,6 +5,12 @@ from ml.utils.data_utils import calculate_covariance_matrix
 
 
 def project_on_eigen(X, dim):
+    """
+    PrincipalComponentAnalysis()
+    pca.fit(X, 2)
+    X_transformed = pca.transform(X)
+    """
+
     covariance = calculate_covariance_matrix(X)
     eigenvalues, eigenvectors = np.linalg.eig(covariance)
     # Sort eigenvalues and eigenvector by largest eigenvalues

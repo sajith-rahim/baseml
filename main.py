@@ -4,8 +4,6 @@ from sklearn import datasets
 from sklearn.metrics import mean_squared_error, accuracy_score
 from sklearn.model_selection import train_test_split
 
-from ml.supervised.knn.knn import KNearestNeighbours
-from ml.supervised.naive_bayes.gaussian_naive_bayes import GaussianNaiveBayes
 from ml.supervised.regression.bayesian.bayesian import BayesianRegression
 from ml.utils.viz import plot_in_2d
 
