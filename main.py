@@ -6,29 +6,54 @@ from sklearn.model_selection import train_test_split
 
 from ml.supervised.knn.knn import KNearestNeighbours
 from ml.supervised.naive_bayes.gaussian_naive_bayes import GaussianNaiveBayes
+from ml.supervised.regression.bayesian.bayesian import BayesianRegression
 from ml.utils.viz import plot_in_2d
 
 if __name__ == '__main__':
     print('baseml')
 
-    data = datasets.load_iris()
-    X = data.data
-    y = data.target
+    # Load the diabetes dataset
+    diabetes_X, diabetes_y = datasets.load_diabetes(return_X_y=True)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+    # Use only one feature
+    diabetes_X = diabetes_X[:, np.newaxis, 2]
+    diabetes_X = np.insert(diabetes_X, 0, 1, axis=1)
 
-    model = GaussianNaiveBayes()
+    # Split the data into training/testing sets
+    diabetes_X_train = diabetes_X[:-20]
+    diabetes_X_test = diabetes_X[-20:]
 
-    model.fit(X_train, y_train)
+    # Split the targets into training/testing sets
+    diabetes_y_train = diabetes_y[:-20]
+    diabetes_y_test = diabetes_y[-20:]
+
+    n_samples, n_features = np.shape(diabetes_X_train)
 
 
-    y_cap = model.predict(X_test)
-    print(y_cap)
-    y_cap = np.reshape(y_cap, y_test.shape)
+    mu_0 = np.array([0.1] * n_features)
+    omega_0 = np.diag([.001] * n_features)
+    nu_0 = 1
+    sig = 10
+    cred_int = 100
 
-    accuracy = accuracy_score(y_test, y_cap)
-    print("Accuracy:", accuracy)
+    model = BayesianRegression(n_draws=100, mu_0=mu_0, nu_0=nu_0, omega_0=omega_0, scale_param_sigma=sig)
+
+    model.fit(diabetes_X_train, diabetes_y_train)
+
+    y_pred = model.predict(diabetes_X_test, True)
+
+
+
+    mse = mean_squared_error(diabetes_y_test, y_pred['pred'])
+    print("Mean squared error: %s" % (mse))
 
     # Plot outputs
-    # plot_in_2d(X_test, y_test, title="KNN", accuracy=accuracy, legend_labels=data.target_names)
-    plot_in_2d(X_test, y_cap, title="GNB", accuracy=accuracy, legend_labels=data.target_names)
+    plt.scatter(np.delete(diabetes_X_test, 0, 1), diabetes_y_test, color='black')
+    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['pred'], color='blue', linewidth=1)
+    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['lower'], color='red', linewidth=1)
+    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['higher'], color='red', linewidth=1)
+
+    plt.xticks(())
+    plt.yticks(())
+
+    plt.show()
