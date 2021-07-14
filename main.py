@@ -1,57 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import datasets
+from sklearn.datasets import make_classification
 from sklearn.metrics import mean_squared_error, accuracy_score
 from sklearn.model_selection import train_test_split
 
+from ml.supervised.fischers_lda.lda import LDA
 from ml.supervised.regression.bayesian.bayesian import BayesianRegression
 from ml.utils.viz import plot_in_2d
 
 if __name__ == '__main__':
     print('baseml')
 
-    # Load the diabetes dataset
-    diabetes_X, diabetes_y = datasets.load_diabetes(return_X_y=True)
+    X, y = make_classification(n_samples=1000, n_features=9, n_informative=5,
+                               random_state=999, n_classes=2, class_sep=1.50, )
 
-    # Use only one feature
-    diabetes_X = diabetes_X[:, np.newaxis, 2]
-    diabetes_X = np.insert(diabetes_X, 0, 1, axis=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, stratify=y)
 
-    # Split the data into training/testing sets
-    diabetes_X_train = diabetes_X[:-20]
-    diabetes_X_test = diabetes_X[-20:]
+    lda = LDA()
+    lda.fit(X_train, y_train)
+    ypred = lda.predict(X_test)
+    accuracy = accuracy_score(y_test, ypred)
+    print("Accuracy:", accuracy)
 
-    # Split the targets into training/testing sets
-    diabetes_y_train = diabetes_y[:-20]
-    diabetes_y_test = diabetes_y[-20:]
-
-    n_samples, n_features = np.shape(diabetes_X_train)
-
-
-    mu_0 = np.array([0.1] * n_features)
-    omega_0 = np.diag([.001] * n_features)
-    nu_0 = 1
-    sig = 10
-    cred_int = 100
-
-    model = BayesianRegression(n_draws=100, mu_0=mu_0, nu_0=nu_0, omega_0=omega_0, scale_param_sigma=sig)
-
-    model.fit(diabetes_X_train, diabetes_y_train)
-
-    y_pred = model.predict(diabetes_X_test, True)
-
-
-
-    mse = mean_squared_error(diabetes_y_test, y_pred['pred'])
-    print("Mean squared error: %s" % (mse))
-
-    # Plot outputs
-    plt.scatter(np.delete(diabetes_X_test, 0, 1), diabetes_y_test, color='black')
-    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['pred'], color='blue', linewidth=1)
-    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['lower'], color='red', linewidth=1)
-    plt.plot(np.delete(diabetes_X_test, 0, 1), y_pred['higher'], color='red', linewidth=1)
-
-    plt.xticks(())
-    plt.yticks(())
-
-    plt.show()
+    plot_in_2d(X_test, ypred, title="2 Class Fischer's LDA", accuracy=accuracy)
