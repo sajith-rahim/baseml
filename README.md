@@ -1,4 +1,4 @@
-Implementation of Base ML Algorithms
+Implementation of Base ML Algorithms :card_index_dividers:
 
 ### Structure
 ```
