@@ -2,7 +2,7 @@
 
 Implementation of Base ML Algorithms :card_index_dividers:
 
-### Structure
+### Directory Structure
 ```
 {
  baseml:
